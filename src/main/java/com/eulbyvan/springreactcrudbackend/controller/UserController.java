@@ -1,5 +1,6 @@
 package com.eulbyvan.springreactcrudbackend.controller;
 
+import com.eulbyvan.springreactcrudbackend.exception.UserNotFoundException;
 import com.eulbyvan.springreactcrudbackend.model.User;
 import com.eulbyvan.springreactcrudbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/1.0/users")
+@CrossOrigin("http://localhost:3000")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -27,5 +29,11 @@ public class UserController {
     @GetMapping
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 }
